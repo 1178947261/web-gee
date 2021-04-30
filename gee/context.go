@@ -6,15 +6,15 @@ import (
 	"net/http"
 )
 
-// 返回的数据结构
+// H 返回的数据结构
 type H map[string]interface{}
 
-// 结构体- 可以看作是一个类 参数就是类属性
+// Context 结构体- 可以看作是一个类 参数就是类属性
 type Context struct {
 
 	// HTTP 请求的原始对象
 	Writer  http.ResponseWriter
-	Request  *http.Request
+	Request *http.Request
 	// HTTP 请求的信息
 	//URL -
 	Path string
@@ -22,26 +22,23 @@ type Context struct {
 	Method string
 	// 响应请求的状态码 -
 	StatusCode int
-
 }
 
 /**
- 	开始封装 常用方法
- */
+开始封装 常用方法
+*/
 
-// 初始化-结构体
-
+// newContext 初始化-结构体
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	return &Context{
-		Writer: w,
-		Request:    req,
-		Path:   req.URL.Path,
-		Method: req.Method,
+		Writer:  w,
+		Request: req,
+		Path:    req.URL.Path,
+		Method:  req.Method,
 	}
 }
 
-
-// 获取POST参数
+// PostForm 获取POST参数
 
 func (c Context) PostForm(key string) string {
 
@@ -61,16 +58,15 @@ func (c *Context) Status(code int) {
 	c.Writer.WriteHeader(code)
 }
 
-
 // 设置响应的返回头
 
-func (c Context) SetHeader(key string,value string)  {
-	c.Writer.Header().Set(key,value)
+func (c Context) SetHeader(key string, value string) {
+	c.Writer.Header().Set(key, value)
 }
 
 // 返回字符串
 
-func (c Context)String(code int, format string, values ...interface{})  {
+func (c Context) String(code int, format string, values ...interface{}) {
 	c.SetHeader("Content-Type", "text/plain")
 	c.Status(code)
 	c.Writer.Write([]byte(fmt.Sprintf(format, values...)))
@@ -91,7 +87,6 @@ func (c *Context) Data(code int, data []byte) {
 	c.Status(code)
 	c.Writer.Write(data)
 }
-
 
 func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
