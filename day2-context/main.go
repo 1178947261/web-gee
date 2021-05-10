@@ -1,7 +1,6 @@
 package main
 
 import (
-	"gee"
 	"gee/gee"
 	"net/http"
 )
@@ -17,11 +16,11 @@ func main() {
 	})
 
 	r.POST("/login", func(c *gee.Context) {
-		c.JSON(http.StatusOK, gee.H{
+		c.Json(http.StatusOK, gee.H{
 			"username": c.PostForm("username"),
 			"password": c.PostForm("password"),
 		})
 	})
-
 	r.Run(":9999")
+
 }
